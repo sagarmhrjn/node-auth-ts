@@ -1,7 +1,26 @@
+import mongoose from 'mongoose'
 import express from 'express'
+import session from 'express-session'
+import Redis from 'ioredis';
+import connectRedis from 'connect-redis';
+import { REDIS_OPTIONS, SESSION_OPTIONS, APP_PORT, MONGO_URI, MONGO_OPTIONS } from './config'
 
-const app = express();
+    ; (async () => {
+        await mongoose.connect(MONGO_URI, MONGO_OPTIONS)
+        const RedisStore = connectRedis(session)
 
-app.get('/', (req, res) => res.json({ message: 'Ok' }))
+        const client = new Redis(REDIS_OPTIONS)
 
-app.listen(3000, ()=> console.log(`http://localhost:${3000}`))
+        const app = express();
+
+        app.use(
+            session({
+                ...SESSION_OPTIONS,
+                store: new RedisStore({ client })
+            })
+        )
+
+        app.get('/', (req, res) => res.json({ message: 'Ok' }))
+
+        app.listen(APP_PORT, () => console.log(`http://localhost:${APP_PORT}`))
+    })()
