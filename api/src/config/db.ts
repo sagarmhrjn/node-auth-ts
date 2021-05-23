@@ -1,15 +1,23 @@
 import { ConnectionOptions } from 'mongoose'
+
 const {
-    MONGO_USERNAME = 'admin',
-    MONGO_PASSWORD = 'secret',
-    MONGO_HOST = 'localhost',
-    MONGO_PORT = 27017,
-    MONGO_DATABASE = 'auth'
+  MONGO_USERNAME = 'admin',
+  MONGO_PASSWORD = 'secret',
+  MONGO_HOST = 'localhost',
+  MONGO_PORT = 27017,
+  MONGO_DATABASE = 'auth'
 } = process.env
 
-export const MONGO_URI = `mongodb://${MONGO_USERNAME}:${encodeURIComponent(MONGO_PASSWORD)}@${MONGO_PORT}/${MONGO_DATABASE}`
+/**
+ * Issue with docker mongo authentication
+ *  */ 
+// export const MONGO_URI = `mongodb://${MONGO_USERNAME}:${
+//   encodeURIComponent(MONGO_PASSWORD)
+// }@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}`
+
+export const MONGO_URI = `mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DATABASE}`
 
 export const MONGO_OPTIONS: ConnectionOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 }
